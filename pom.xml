@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.jc</groupId>
+    <artifactId>jc</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>com.jc.modulehello</module>
+        <module>com.jc.modulehi</module>
+        <module>com.jc.serviceproviderinterface</module>
+        <module>com.jc.serviceprovider1</module>
+        <module>com.jc.serviceprovider2</module>
+    </modules>
+
+    <properties>
+        <maven.version>3.5.4</maven.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <jdk.version>10</jdk.version>
+        <module.outdir>${project.basedir}/../mod</module.outdir>
+    </properties>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.8.0</version>
+                    <configuration>
+                        <release>${jdk.version}</release>
+                        <source>>${jdk.version}</source>
+                        <target>>${jdk.version}</target>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.1.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>exec-maven-plugin</artifactId>
+                    <version>1.6.0</version>
+                    <configuration>
+                        <skip>true</skip>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <outputDirectory>${module.outdir}</outputDirectory>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.jc.modulehello.HelloModule</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <executable>${JAVA_HOME}/bin/java</executable>
+                    <workingDirectory>${project.basedir}/..</workingDirectory>
+                    <longModulepath>false</longModulepath>
+                    <arguments>
+                        <argument>--module-path</argument> <!-- or -p  -->
+                        <!--&lt;!&ndash; automatically creates the modulepath using all project dependencies,-->
+                             <!--also adding the project build directory &ndash;&gt;-->
+                        <argument>mod</argument>
+                        <!--<modulepath/>-->
+                        <argument>--module</argument> <!-- or -m -->
+                        <argument>com.jc.modulehello/com.jc.modulehello.HelloModule</argument>
+                    </arguments>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
